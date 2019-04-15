@@ -8,13 +8,11 @@ namespace Exercism.Analyzers.CSharp.Analyzers.TwoFer
             Analyze(new TwoFerSolution(parsedSolution));
 
         private static SolutionAnalysis Analyze(TwoFerSolution twoFerSolution) =>
-            twoFerSolution.AnalyzeError() ??
-            twoFerSolution.AnalyzeSingleLine() ??
-            twoFerSolution.AnalyzeParameterAssignment() ??
-            twoFerSolution.AnalyzeVariableAssignment() ??
+            twoFerSolution.DisapproveWhenInvalid() ??
+            twoFerSolution.ApproveWhenValid() ??
             twoFerSolution.ReferToMentor();
 
-        private static SolutionAnalysis AnalyzeError(this TwoFerSolution twoFerSolution)
+        private static SolutionAnalysis DisapproveWhenInvalid(this TwoFerSolution twoFerSolution)
         {
             if (twoFerSolution.UsesOverloads())
                 return twoFerSolution.DisapproveWithComment(TwoFerComments.UseSingleFormattedStringNotMultiple);
@@ -43,6 +41,11 @@ namespace Exercism.Analyzers.CSharp.Analyzers.TwoFer
 
             return null;
         }
+
+        private static SolutionAnalysis ApproveWhenValid(this TwoFerSolution twoFerSolution) =>
+            twoFerSolution.AnalyzeSingleLine() ??
+            twoFerSolution.AnalyzeParameterAssignment() ??
+            twoFerSolution.AnalyzeVariableAssignment();
 
         private static SolutionAnalysis AnalyzeSingleLine(this TwoFerSolution twoFerSolution)
         {
